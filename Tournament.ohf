@@ -1,0 +1,1229 @@
+##notes##
+
+
+
+##f$rematch##
+
+
+
+##f$autopost##
+
+
+
+##f$prefold##
+((betround == 1) AND list_prefold)
+
+
+##f$chat##
+
+
+
+##f$delay##
+// Rendom delay of 0..3000 milli-seconds
+Random * 30
+
+
+##f$allin_on_betsize_balance_ratio##
+// Not present in Geckos original bot for OpenHoldem 2.x,
+// His code suggests that he wanted it to be 0.66,
+// but as Gecko used raise-by-semantics and we use raise-to
+// about 0.50 looks like a more appropriate value,
+// firther improving it to 40% OOP,
+// Fail-safe for mis-scraped stacks
+WHEN (StackSize <= 0) RETURN 0.00 FORCE
+WHEN NOT HandIsHeadsup RETURN f$positional_allin_on_betsize_balance_ratio FORCE
+// Sole opponent already allin or mis-scraped opponents stack
+WHEN (StackSize_headsupchair <= 0) RETURN f$positional_allin_on_betsize_balance_ratio FORCE
+// Opponents stack larger than ours: normal behaviour
+WHEN (StackSize_headsupchair >= StackSize) RETURN f$positional_allin_on_betsize_balance_ratio FORCE
+// Single opponent with smaller stack.
+// Go more lightly allin if our bet is more than 50% of his stack.
+WHEN Others RETURN (f$positional_allin_on_betsize_balance_ratio * (StackSize_headsupchair / StackSize)) FORCE
+
+
+##f$shoot_replay_frame##
+
+
+
+##f$ini_function_on_startup##
+// Ini-functions are meant for
+//   * Initialization of memory-symbols at well-defined times
+//   * Triggering calculations, e.g. in a DLL
+
+
+##f$ini_function_on_connection##
+ 
+
+##f$ini_function_on_heartbeat##
+ 
+
+##f$prwin_willplay##
+
+
+
+##f$icm_prize5##
+
+
+
+##f$icm_prize6##
+ 
+
+##f$icm_prize8##
+
+
+
+##f$debug##
+       4.000 = userchair
+       1.000 = InSmallBlind
+       0.000 = LastRaiserPosition
+      91.000 = EffectiveMaxStacksizeOfActiveOpponents
+       1.000 = HandIsHeadsup
+
+
+##listSB_limp_GTO_100##
+A2o A3o K4o K5o J7o Q7o 84s 94s T2s K2s	K3s 93s K3o Q6o 86o Q5o 65o 52s
+
+
+##listSB_rfi_GTO_100##
+AA KK QQ JJ TT 99 88 77 66 55 44 33 22
+AKs AQs AJs ATs A9s A8s A7s A6s A5s A4s A3s A2s KQs KJs KTs K9s K8s K7s K6s K5s K4s QJs QTs Q9s Q8s Q7s Q6s Q5s Q4s Q3s Q2s JTs J9s J8s J7s J6s J5s J4s J3s J2s T9s T8s T7s T6s T5s T4s T3s 98s 97s 96s 95s 87s 86s 85s 76s 75s 74s 65s 64s 63s 54s 53s 43s
+AKo AQo AJo ATo A9o A8o A7o A6o A5o A4o KQo KJo KTo K9o K8o K7o K6o QJo QTo Q9o Q8o JTo J9o J8o T9o T8o T7o 98o 97o 87o 76o
+
+
+##list_prefold##
+92s 83s 82s 73s 72s 62s 42s 32s
+K2o Q4o Q3o Q2o J6o J5o J4o J3o J2o T6o T5o T4o T3o T2o 96o 95o 94o 93o 92o 85o 84o 83o 82o 75o 74o 73o 72o 64o 63o 62o 54o 53o 52o 43o 42o 32o
+
+
+##f$preflop##
+////////////////////////////////////////////////////////////////
+///////////SB PREFLOP 100bb - 87bb w/ Standard  Sizings//////////////////////////
+/////////////////////////////////////////////////////////////////////
+WHEN ((InSmallBlind) AND (StartingStackSize > 74) AND (HandIsHeadsup) AND (Calls = 0))
+			WHEN f$preflopSBvBB100bb_Fold Fold FORCE
+			WHEN f$preflopSBvBB100bb_LFI Call  FORCE
+			WHEN f$preflopSBvBB100bb_RFI RaiseTo 3 FORCE
+			WHEN f$preflopSBvBB100bb_Limp_Fold Fold FORCE
+			WHEN f$preflopSBvBB100bb_Limp_Fold_B Fold FORCE
+			WHEN f$preflopSBvBB100bb_Limp_Call Call FORCE
+			WHEN f$preflopSBvBB100bb_Limp_Call_B Call FORCE
+			WHEN f$preflopSBvBB100bb_Limp_3bet RaiseTo 11 FORCE
+			WHEN f$preflopSBvBB100bb_Limp_3bet_B RaiseTo 12.3 FORCE
+			WHEN f$preflopSBvBB100bb_Fold_to_3bet Fold FORCE
+			WHEN f$preflopSBvBB100bb_Fold_to_3bet_B Fold FORCE
+			WHEN f$preflopSBvBB100bb_Call_3bet Call FORCE
+			WHEN f$preflopSBvBB100bb_Call_3bet_B Call FORCE
+			WHEN f$preflopSBvBB100bb_4bet RaiseTo 23 FORCE
+			WHEN f$preflopSBvBB100bb_4bet_B RaiseTo 25.2 FORCE
+			WHEN f$preflopSBvBB100bb_Fold_to_4bet Fold FORCE
+			WHEN f$preflopSBvBB100bb_Fold_to_4bet_B Fold FORCE
+			WHEN f$preflopSBvBB100bb_Call_4bet Call FORCE
+			WHEN f$preflopSBvBB100bb_Call_4bet_B Call FORCE
+			WHEN f$preflopSBvBB100bb_5bet_AllIn RaiseMax FORCE
+			WHEN f$preflopSBvBB100bb_5bet_AllIn_B RaiseMax FORCE
+			WHEN f$preflopSBvBB100bb_Fold_to_5bet Fold FORCE
+			WHEN f$preflopSBvBB100bb_Call_5bet  RaiseMax FORCE
+			WHEN Others Fold FORCE
+
+WHEN ((InSmallBlind) AND (StartingStackSize > 74) AND (Calls  = 0) AND (FirstRaiserPosition = 2))
+			WHEN f$preflopSBvBU100bb_Fold Fold FORCE
+			WHEN f$preflopSBvBU100bb_Call Call FORCE
+			WHEN f$preflopSBvBU100bb_3bet RaiseTo 10 FORCE
+			WHEN f$preflopSBvBU100bb_Fold_to_4bet Fold FORCE
+			WHEN f$preflopSBvBU100bb_Call_4bet Call FORCE
+			WHEN f$preflopSBvBU100bb_5bet_AllIn RaiseMax FORCE
+
+
+##f$river##
+
+
+
+##f$preflopSBvBB100bb_4bet##
+WHEN ((Raises = 1) AND
+				(BotsLastAction = Raise) AND
+			 (LastRaiserPosition = 0) AND
+			 (EffectiveMaxStacksizeOfActiveOpponents > 63) AND
+			 (BetSize < 11)) RETURN 1 FORCE
+
+
+##f$preflopSBvBB100bb_4bet_B##
+WHEN ((Raises = 1) AND
+			 (LastRaiserPosition = 0) AND
+			 (EffectiveMaxStacksizeOfActiveOpponents > 60) AND
+			 (BetSize > 10.9) AND
+				(BetSize < 15)) RETURN 1 FORCE
+
+##f$preflopSBvBB100bb_5bet_AllIn##
+WHEN ((BotsLastPreflopAction = Raise) AND
+			 (Raises = 2) AND
+			 (LastRaiserPosition = 0) AND
+			 (BetSize < 24.1)) RETURN 1 FORCE
+
+
+##f$preflopSBvBB100bb_5bet_AllIn_B##
+WHEN ((BotsLastPreflopAction = Raise) AND
+			 (Raises = 2) AND
+			 (LastRaiserPosition = 0) AND
+				(BetSize > 24)) RETURN 1 FORCE
+
+##f$preflopSBvBB100bb_Call_3bet##
+WHEN ((Raises = 1) AND
+			 (LastRaiserPosition = 0) AND
+			 (EffectiveMaxStacksizeOfActiveOpponents > 63) AND
+			 (BetSize < 11))
+			WHEN (hand$AQsuited) RETURN 1 FORCE
+			WHEN (hand$AJsuited) RETURN 1 FORCE
+			WHEN (hand$ATsuited) RETURN 1 FORCE
+			WHEN (hand$A7suited) RETURN 1 FORCE
+			WHEN (hand$KQsuited) RETURN 1 FORCE
+			WHEN (hand$KJsuited) RETURN 1 FORCE
+			WHEN (hand$K8suited) RETURN 1 FORCE
+			WHEN (hand$K7suited) RETURN 1 FORCE
+			WHEN (hand$QJsuited) RETURN 1 FORCE
+			WHEN (hand$QTsuited) RETURN 1 FORCE
+			WHEN (hand$Q8suited) RETURN 1 FORCE
+			WHEN (hand$Q7suited) RETURN 1 FORCE
+			WHEN (hand$T7suited) RETURN 1 FORCE
+			WHEN (hand$86suited) RETURN 1 FORCE
+			WHEN (hand$99) RETURN 1 FORCE
+			WHEN (hand$97suited) RETURN 1 FORCE
+			WHEN (hand$88) RETURN 1 FORCE
+			WHEN (hand$77) RETURN 1 FORCE
+			WHEN (hand$76suited) RETURN 1 FORCE
+			WHEN (hand$66) RETURN 1 FORCE
+			WHEN (hand$65suited) RETURN 1 FORCE
+			WHEN (hand$55) RETURN 1 FORCE
+			WHEN (hand$54suited) RETURN 1 FORCE
+			WHEN (hand$44) RETURN 1 FORCE
+			WHEN (hand$33) RETURN 1 FORCE
+			WHEN (hand$22) RETURN 1 FORCE
+			WHEN (hand$A9suited) AND (Random < 98) RETURN 1 FORCE
+			WHEN (hand$A8suited) AND (Random < 85) RETURN 1 FORCE
+			WHEN (hand$A6suited) AND (Random < 89) RETURN 1 FORCE
+			WHEN (hand$A5suited) AND (Random < 83) RETURN 1 FORCE
+			WHEN (hand$A4suited) AND (Random < 79) RETURN 1 FORCE
+			WHEN (hand$A3suited) AND (Random < 60) RETURN 1 FORCE
+			WHEN (hand$KTsuited) AND (Random < 93) RETURN 1 FORCE
+			WHEN (hand$K9suited) AND (Random < 88) RETURN 1 FORCE
+			WHEN (hand$K6suited) AND (Random < 65) RETURN 1 FORCE
+			WHEN (hand$K5suited) AND (Random < 36) RETURN 1 FORCE
+			WHEN (hand$K4suited) AND (Random < 06) RETURN 1 FORCE
+			WHEN (hand$AQo) AND (Random < 41) RETURN 1 FORCE
+			WHEN (hand$KQo) AND (Random < 64) RETURN 1 FORCE
+			WHEN (hand$Q9suited) AND (Random < 73) RETURN 1 FORCE
+			WHEN (hand$AJo) AND (Random < 42) RETURN 1 FORCE
+			WHEN (hand$KJo) AND (Random < 47) RETURN 1 FORCE
+			WHEN (hand$QJo) AND (Random < 16) RETURN 1 FORCE
+			WHEN (hand$JJ) AND (Random < 56) RETURN 1 FORCE
+			WHEN (hand$JTsuited) AND (Random < 93) RETURN 1 FORCE
+			WHEN (hand$J9suited) AND (Random < 82) RETURN 1 FORCE
+			WHEN (hand$J8suited) AND (Random < 68) RETURN 1 FORCE
+			WHEN (hand$ATo) AND (Random < 36) RETURN 1 FORCE
+			WHEN (hand$KTo) AND (Random < 10) RETURN 1 FORCE
+			WHEN (hand$TT) AND (Random < 77) RETURN 1 FORCE
+			WHEN (hand$T9suited) AND (Random < 82) RETURN 1 FORCE
+			WHEN (hand$T8suited) AND (Random < 97) RETURN 1 FORCE
+			WHEN (hand$T7suited) AND (Random < 38) RETURN 1 FORCE
+			WHEN (hand$98suited) AND (Random < 86) RETURN 1 FORCE
+			WHEN (hand$87suited) AND (Random < 82) RETURN 1 FORCE
+
+
+##f$preflopSBvBB100bb_Call_3bet_B##
+WHEN ((Raises = 1) AND
+			 (LastRaiserPosition = 0) AND
+			 (EffectiveMaxStacksizeOfActiveOpponents > 60) AND
+			 (BetSize > 10.9) AND
+				(BetSize < 15))
+			WHEN (hand$AQsuited) RETURN 1 FORCE
+			WHEN (hand$AJsuited) RETURN 1 FORCE
+			WHEN (hand$ATsuited) RETURN 1 FORCE
+			WHEN (hand$KQsuited) RETURN 1 FORCE
+			WHEN (hand$KJsuited) AND (Random < 77) RETURN 1 FORCE
+			WHEN (hand$K8suited) RETURN 1 FORCE
+			WHEN (hand$K7suited) RETURN 1 FORCE
+			WHEN (hand$QJsuited) RETURN 1 FORCE
+			WHEN (hand$QTsuited) RETURN 1 FORCE
+			WHEN (hand$86suited) AND (Random < 48) RETURN 1 FORCE
+			WHEN (hand$99) RETURN 1 FORCE
+			WHEN (hand$88) RETURN 1 FORCE
+			WHEN (hand$77) RETURN 1 FORCE
+			WHEN (hand$76suited) RETURN 1 FORCE
+			WHEN (hand$66) RETURN 1 FORCE
+			WHEN (hand$65suited) AND (Random < 96) RETURN 1 FORCE
+			WHEN (hand$55) RETURN 1 FORCE
+			WHEN (hand$54suited) AND (Random  < 88) RETURN 1 FORCE
+			WHEN (hand$44) RETURN 1 FORCE
+			WHEN (hand$33) RETURN 1 FORCE
+			WHEN (hand$A9suited) AND (Random < 96) RETURN 1 FORCE
+			WHEN (hand$A8suited) AND (Random < 86) RETURN 1 FORCE
+			WHEN (hand$A7suited) AND (Random < 65) RETURN 1 FORCE
+			WHEN (hand$A6suited) AND (Random < 50) RETURN 1 FORCE
+			WHEN (hand$A5suited) AND (Random < 53) RETURN 1 FORCE
+			WHEN (hand$KTsuited) AND (Random < 73) RETURN 1 FORCE
+			WHEN (hand$K9suited) AND (Random < 40) RETURN 1 FORCE
+			WHEN (hand$K6suited) AND (Random < 83) RETURN 1 FORCE
+			WHEN (hand$K5suited) AND (Random < 30) RETURN 1 FORCE
+			WHEN (hand$AQo) AND (Random < 17) RETURN 1 FORCE
+			WHEN (hand$JTsuited) AND (Random < 66) RETURN 1 FORCE
+			WHEN (hand$TT) AND (Random < 58) RETURN 1 FORCE
+			WHEN (hand$T9suited) AND (Random < 79) RETURN 1 FORCE
+			WHEN (hand$87suited) AND (Random < 82) RETURN 1 FORCE
+
+##f$preflopSBvBB100bb_Call_4bet##
+WHEN ((BotsLastPreflopAction = Raise) AND
+			 (Raises = 2) AND
+			 (LastRaiserPosition = 0) AND
+			 (EffectiveMaxStacksizeOfActiveOpponents > 63) AND
+			 (BetSize < 24.1))
+			WHEN (hand$AQsuited) RETURN 1 FORCE
+			WHEN (hand$AJsuited) RETURN 1 FORCE
+			WHEN (hand$ATsuited) RETURN 1 FORCE
+			WHEN (hand$A9suited) RETURN 1 FORCE
+			WHEN (hand$A8suited) RETURN 1 FORCE
+			WHEN (hand$A6suited) RETURN 1 FORCE
+			WHEN (hand$A3suited) RETURN 1 FORCE
+			WHEN (hand$A2suited) RETURN 1 FORCE
+			WHEN (hand$KQsuited) RETURN 1 FORCE
+			WHEN (hand$KJsuited) RETURN 1 FORCE
+			WHEN (hand$KTsuited) RETURN 1 FORCE
+			WHEN (hand$K9suited) RETURN 1 FORCE
+			WHEN (hand$QTsuited) RETURN 1 FORCE
+			WHEN (hand$JTsuited) RETURN 1 FORCE
+			WHEN (hand$T9suited) RETURN 1 FORCE
+			WHEN (hand$99) RETURN 1 FORCE
+			WHEN (hand$98suited) RETURN 1 FORCE
+			WHEN (hand$97suited) RETURN 1 FORCE
+			WHEN (hand$88) RETURN 1 FORCE
+			WHEN (hand$87suited) RETURN 1 FORCE
+			WHEN (hand$86suited) RETURN 1 FORCE
+			WHEN (hand$76suited) RETURN 1 FORCE
+			WHEN (hand$65suited) RETURN 1 FORCE
+			WHEN (hand$64suited) RETURN 1 FORCE
+			WHEN (hand$54suited) RETURN 1 FORCE
+			WHEN (hand$K7suited) RETURN 1 FORCE
+			WHEN (hand$K6suited) RETURN 1 FORCE
+			WHEN (hand$AQo) RETURN 1 FORCE
+			WHEN ((hand$QQ) AND (Random < 42)) RETURN 1 FORCE
+			WHEN (hand$Q9suited) RETURN 1 FORCE
+			WHEN ((hand$JJ) AND (Random < 74)) RETURN 1 FORCE
+			WHEN (hand$J9suited) RETURN 1 FORCE
+			WHEN (hand$TT) AND (Random < 69) RETURN 1 FORCE
+			WHEN (hand$T8suited) RETURN 1 FORCE
+			WHEN (hand$AJo) RETURN 1 FORCE
+			WHEN ((hand$AA) AND (Random < 69)) RETURN 1 FORCE
+
+
+##f$preflopSBvBB100bb_Call_4bet_B##
+WHEN ((BotsLastPreflopAction = Raise) AND
+			 (Raises = 2) AND
+			 (LastRaiserPosition = 0) AND
+			 (EffectiveMaxStacksizeOfActiveOpponents > 44) AND
+			 (BetSize > 24) AND
+				(BetSize < 31))
+			WHEN (hand$AQsuited) RETURN 1 FORCE
+			WHEN (hand$AJsuited) RETURN 1 FORCE
+			WHEN (hand$ATsuited) RETURN 1 FORCE
+			WHEN (hand$A9suited) RETURN 1 FORCE
+			WHEN (hand$A8suited) RETURN 1 FORCE
+			WHEN (hand$A7suited) RETURN 1 FORCE
+			WHEN (hand$A5suited) AND (Random < 18) RETURN 1 FORCE
+			WHEN (hand$KQsuited) RETURN 1 FORCE
+			WHEN (hand$KJsuited) RETURN 1 FORCE
+			WHEN (hand$KTsuited) RETURN 1 FORCE
+			WHEN (hand$QTsuited) RETURN 1 FORCE
+			WHEN (hand$JTsuited) AND (Random < 97) RETURN 1 FORCE
+			WHEN (hand$T9suited) RETURN 1 FORCE
+			WHEN (hand$99) AND (Random < 79) RETURN 1 FORCE
+			WHEN (hand$98suited) RETURN 1 FORCE
+			WHEN (hand$97suited) RETURN 1 FORCE
+			WHEN (hand$87suited) RETURN 1 FORCE
+			WHEN (hand$86suited) RETURN 1 FORCE
+			WHEN (hand$76suited) RETURN 1 FORCE
+			WHEN (hand$65suited) RETURN 1 FORCE
+			WHEN (hand$54suited) RETURN 1 FORCE
+			WHEN (hand$AQo) RETURN 1 FORCE
+			WHEN ((hand$QQ) AND (Random < 02)) RETURN 1 FORCE
+			WHEN ((hand$JJ) AND (Random < 83)) RETURN 1 FORCE
+			WHEN (hand$J9suited) RETURN 1 FORCE
+			WHEN (hand$TT) AND (Random < 88) RETURN 1 FORCE
+			WHEN (hand$T8suited) RETURN 1 FORCE
+			WHEN ((hand$AA) AND (Random < 73)) RETURN 1 FORCE
+
+
+##f$preflopSBvBB100bb_Call_5bet##
+WHEN ((BotsLastPreflopAction = Raise) AND
+			 (Raises = 2) AND
+			 (LastRaiserPosition = 0) AND
+			 (EffectiveMaxStacksizeOfActiveOpponents > 24) AND
+			 (BetSize > 50)) RETURN 1 FORCE
+
+
+##f$preflopSBvBB100bb_Fold##
+WHEN (Raises = 0 AND (EffectiveMaxStacksizeOfActiveOpponents > 74))
+			WHEN list_prefold RETURN 1 FORCE
+			WHEN (hand$K3o) AND (Random > 10) RETURN 1 FORCE
+			WHEN (hand$Q5o) AND (Random > 52) RETURN 1 FORCE
+			WHEN (hand$Q6o) AND (Random > 78) RETURN 1 FORCE
+			WHEN (hand$86o) AND (Random > 73) RETURN 1 FORCE
+			WHEN (hand$65o) AND (Random > 45) RETURN 1 FORCE
+			WHEN (hand$52suited) AND (Random > 77) RETURN 1 FORCE
+			WHEN (hand$93suited) AND (Random > 68) RETURN 1 FORCE
+
+
+##f$preflopSBvBB100bb_Fold_to_3bet##
+WHEN ((Raises = 1) AND
+			 (LastRaiserPosition = 0) AND
+			 (EffectiveMaxStacksizeOfActiveOpponents > 63) AND
+			 (BetSize < 11.6))
+			WHEN (hand$Q6suited) RETURN 1 FORCE
+			WHEN (hand$Q5suited) RETURN 1 FORCE
+			WHEN (hand$Q4suited) RETURN 1 FORCE
+			WHEN (hand$Q3suited) RETURN 1 FORCE
+			WHEN (hand$Q2suited) RETURN 1 FORCE
+			WHEN (hand$J7suited) RETURN 1 FORCE
+			WHEN (hand$J6suited) RETURN 1 FORCE
+			WHEN (hand$J5suited) RETURN 1 FORCE
+			WHEN (hand$J4suited) RETURN 1 FORCE
+			WHEN (hand$J3suited) RETURN 1 FORCE
+			WHEN (hand$J2suited) RETURN 1 FORCE
+			WHEN (hand$T6suited) RETURN 1 FORCE
+			WHEN (hand$T5suited) RETURN 1 FORCE
+			WHEN (hand$T4suited) RETURN 1 FORCE
+			WHEN (hand$T3suited) RETURN 1 FORCE
+			WHEN (hand$96suited) RETURN 1 FORCE
+			WHEN (hand$95suited) RETURN 1 FORCE
+			WHEN (hand$85suited) RETURN 1 FORCE
+			WHEN (hand$75suited) RETURN 1 FORCE
+			WHEN (hand$74suited) RETURN 1 FORCE
+			WHEN (hand$64suited) RETURN 1 FORCE
+			WHEN (hand$63suited) RETURN 1 FORCE
+			WHEN (hand$53suited) RETURN 1 FORCE
+			WHEN (hand$43suited) RETURN 1 FORCE
+			WHEN ((hand$Q7suited) AND (Random < 66)) RETURN 1 FORCE
+			WHEN ((hand$T7suited) AND (Random < 62)) RETURN 1 FORCE
+			WHEN ((hand$86suited) AND (Random < 03)) RETURN 1 FORCE
+			WHEN ((hand$KTo) AND (Random < 79)) RETURN 1 FORCE
+			WHEN ((hand$QJo) AND (Random < 63)) RETURN 1 FORCE
+			WHEN (hand$QTo) RETURN 1 FORCE
+			WHEN (hand$JTo) RETURN 1 FORCE
+			WHEN (hand$A9o) RETURN 1 FORCE
+			WHEN (hand$K9o) RETURN 1 FORCE
+			WHEN (hand$Q9o) RETURN 1 FORCE
+			WHEN (hand$J9o) RETURN 1 FORCE
+			WHEN (hand$T9o) RETURN 1 FORCE
+			WHEN (hand$A8o) RETURN 1 FORCE
+			WHEN (hand$K8o) RETURN 1 FORCE
+			WHEN (hand$Q8o) RETURN 1 FORCE
+			WHEN (hand$J8o) RETURN 1 FORCE
+			WHEN (hand$T8o) RETURN 1 FORCE
+			WHEN (hand$98o) RETURN 1 FORCE
+			WHEN (hand$A7o) RETURN 1 FORCE
+			WHEN (hand$K7o) RETURN 1 FORCE
+			WHEN (hand$T7o) RETURN 1 FORCE
+			WHEN (hand$97o) RETURN 1 FORCE
+			WHEN (hand$87o) RETURN 1 FORCE
+			WHEN (hand$A6o) RETURN 1 FORCE
+			WHEN (hand$K6o) RETURN 1 FORCE
+			WHEN (hand$76o) RETURN 1 FORCE
+			WHEN (hand$A5o) RETURN 1 FORCE
+			WHEN (hand$A4o) RETURN 1 FORCE
+
+
+##f$preflopSBvBB100bb_Fold_to_3bet_B##
+WHEN ((Raises = 1) AND
+			 (LastRaiserPosition = 0) AND
+			 (EffectiveMaxStacksizeOfActiveOpponents > 63) AND
+				(BetSize > 11.59))
+			WHEN (hand$Q6suited) RETURN 1 FORCE
+			WHEN (hand$Q5suited) RETURN 1 FORCE
+			WHEN (hand$Q4suited) RETURN 1 FORCE
+			WHEN (hand$Q3suited) RETURN 1 FORCE
+			WHEN (hand$Q2suited) RETURN 1 FORCE
+			WHEN (hand$J7suited) RETURN 1 FORCE
+			WHEN (hand$J6suited) RETURN 1 FORCE
+			WHEN (hand$J5suited) RETURN 1 FORCE
+			WHEN (hand$J4suited) RETURN 1 FORCE
+			WHEN (hand$K4suited) RETURN 1 FORCE
+			WHEN (hand$K3suited) RETURN 1 FORCE
+			WHEN (hand$K2suited) RETURN 1 FORCE
+			WHEN (hand$T7suited) RETURN 1 FORCE
+			WHEN (hand$T6suited) RETURN 1 FORCE
+			WHEN (hand$T5suited) RETURN 1 FORCE
+			WHEN (hand$T4suited) RETURN 1 FORCE
+			WHEN (hand$97suited) RETURN 1 FORCE
+			WHEN (hand$96suited) RETURN 1 FORCE
+			WHEN (hand$95suited) RETURN 1 FORCE
+			WHEN (hand$85suited) RETURN 1 FORCE
+			WHEN (hand$75suited) RETURN 1 FORCE
+			WHEN (hand$74suited) RETURN 1 FORCE
+			WHEN (hand$64suited) RETURN 1 FORCE
+			WHEN (hand$63suited) RETURN 1 FORCE
+			WHEN (hand$53suited) RETURN 1 FORCE
+			WHEN (hand$43suited) RETURN 1 FORCE
+			WHEN (hand$Q7suited) RETURN 1 FORCE
+			WHEN ((hand$86suited) AND (Random < 52)) RETURN 1 FORCE
+			WHEN (hand$KTo) RETURN 1 FORCE
+			WHEN (hand$QJo) RETURN 1 FORCE
+			WHEN (hand$QTo) RETURN 1 FORCE
+			WHEN (hand$JTo) RETURN 1 FORCE
+			WHEN (hand$A9o) RETURN 1 FORCE
+			WHEN (hand$K9o) RETURN 1 FORCE
+			WHEN (hand$Q9o) RETURN 1 FORCE
+			WHEN (hand$J9o) RETURN 1 FORCE
+			WHEN (hand$T9o) RETURN 1 FORCE
+			WHEN (hand$A8o) RETURN 1 FORCE
+			WHEN (hand$K8o) RETURN 1 FORCE
+			WHEN (hand$J8o) RETURN 1 FORCE
+			WHEN (hand$T8o) RETURN 1 FORCE
+			WHEN (hand$98o) RETURN 1 FORCE
+			WHEN (hand$A7o) RETURN 1 FORCE
+			WHEN (hand$K7o) RETURN 1 FORCE
+			WHEN (hand$87o) RETURN 1 FORCE
+			WHEN (hand$A6o) RETURN 1 FORCE
+			WHEN (hand$K6o) RETURN 1 FORCE
+			WHEN (hand$86o) RETURN 1 FORCE
+			WHEN (hand$76o) RETURN 1 FORCE
+			WHEN (hand$A5o) RETURN 1 FORCE
+			WHEN (hand$A4o) RETURN 1 FORCE
+			WHEN (hand$65o) RETURN 1 FORCE
+			WHEN (hand$ATo) AND (Random < 62) RETURN 1 FORCE
+			WHEN (hand$KJo) AND (Random < 57) RETURN 1 FORCE
+			WHEN (hand$65suited) AND (Random < 04) RETURN 1 FORCE
+			WHEN (hand$54suited) AND (Random < 12) RETURN 1 FORCE
+
+##f$preflopSBvBB100bb_Fold_to_4bet##
+WHEN ((BotsLastPreflopAction = Raise) AND
+			 (Raises = 2) AND
+			 (LastRaiserPosition = 0) AND
+			 (EffectiveMaxStacksizeOfActiveOpponents > 50) AND
+			 (BetSize < 24.1))
+			WHEN (hand$K8suited) RETURN 1 FORCE
+			WHEN (hand$K3suited) RETURN 1 FORCE
+			WHEN (hand$KQo) RETURN 1 FORCE
+			WHEN (hand$Q6suited) RETURN 1 FORCE
+			WHEN (hand$Q4suited) RETURN 1 FORCE
+			WHEN (hand$KJo) RETURN 1 FORCE
+			WHEN (hand$QJo) RETURN 1 FORCE
+			WHEN (hand$J8suited) RETURN 1 FORCE
+			WHEN (hand$J7suited) RETURN 1 FORCE
+			WHEN (hand$J6suited) RETURN 1 FORCE
+			WHEN (hand$J5suited) RETURN 1 FORCE
+			WHEN (hand$J4suited) RETURN 1 FORCE
+			WHEN (hand$J3suited) RETURN 1 FORCE
+			WHEN (hand$ATo) RETURN 1 FORCE
+			WHEN (hand$KTo) RETURN 1 FORCE
+			WHEN (hand$QTo) RETURN 1 FORCE
+			WHEN (hand$JTo) RETURN 1 FORCE
+			WHEN (hand$T7suited) RETURN 1 FORCE
+			WHEN (hand$T6suited) RETURN 1 FORCE
+			WHEN (hand$A9o) RETURN 1 FORCE
+			WHEN (hand$K9o) RETURN 1 FORCE
+			WHEN (hand$J9o) RETURN 1 FORCE
+			WHEN (hand$T9o) RETURN 1 FORCE
+			WHEN (hand$96suited) RETURN 1 FORCE
+			WHEN (hand$A8o) RETURN 1 FORCE
+			WHEN (hand$85suited) RETURN 1 FORCE
+			WHEN ((hand$K6suited) AND (Random < 78)) RETURN 1 FORCE
+			WHEN ((hand$AQo) AND (Random < 10)) RETURN 1 FORCE
+			WHEN ((hand$Q9suited) AND (Random  < 76)) RETURN 1 FORCE
+			WHEN ((hand$AJo) AND (Random < 94)) RETURN 1 FORCE
+			WHEN ((hand$J9suited) AND (Random < 22)) RETURN 1 FORCE
+			WHEN ((hand$T8suited) AND (Random < 37)) RETURN 1 FORCE
+
+
+##f$preflopSBvBB100bb_Fold_to_4bet_B##
+WHEN ((BotsLastPreflopAction = Raise) AND
+			 (Raises = 2) AND
+			 (LastRaiserPosition = 0) AND
+			 (EffectiveMaxStacksizeOfActiveOpponents > 50) AND
+			 (BetSize > 24))
+			WHEN (hand$K8suited) RETURN 1 FORCE
+			WHEN (hand$K9suited) RETURN 1 FORCE
+			WHEN (hand$A6suited) RETURN 1 FORCE
+			WHEN (hand$K6suited) RETURN 1 FORCE
+			WHEN (hand$KQo) RETURN 1 FORCE
+			WHEN (hand$KJo) RETURN 1 FORCE
+			WHEN (hand$Q9suited) RETURN 1 FORCE
+			WHEN (hand$AJo) RETURN 1 FORCE
+			WHEN (hand$J8suited) RETURN 1 FORCE
+			WHEN (hand$ATo) RETURN 1 FORCE
+			WHEN (hand$KTo) RETURN 1 FORCE
+			WHEN (hand$JTo) RETURN 1 FORCE
+			WHEN (hand$T7suited) RETURN 1 FORCE
+			WHEN (hand$T6suited) RETURN 1 FORCE
+			WHEN (hand$A9o) RETURN 1 FORCE
+			WHEN (hand$J9o) RETURN 1 FORCE
+			WHEN (hand$96suited) RETURN 1 FORCE
+			WHEN (hand$A8o) RETURN 1 FORCE
+			WHEN (hand$85suited) RETURN 1 FORCE
+			WHEN ((hand$A7suited) AND (Random < 82)) RETURN 1 FORCE
+			WHEN ((hand$QTsuited) AND (Random  < 73)) RETURN 1 FORCE
+			WHEN ((hand$JTsuited) AND (Random < 03)) RETURN 1 FORCE
+			WHEN ((hand$J9suited) AND (Random < 91)) RETURN 1 FORCE
+			WHEN ((hand$T8suited) AND (Random < 92)) RETURN 1 FORCE
+
+
+##f$preflopSBvBB100bb_Fold_to_5bet##
+WHEN ((BotsLastPreflopAction = Raise) AND
+			 (Raises = 2) AND
+			 (LastRaiserPosition = 0) AND
+			 (BetSize > 50))
+			WHEN (hand$A9suited) RETURN 1 FORCE
+			WHEN (hand$A8suited) RETURN 1 FORCE
+			WHEN (hand$A6suited) RETURN 1 FORCE
+			WHEN (hand$A5suited) RETURN 1 FORCE
+			WHEN (hand$A4suited) RETURN 1 FORCE
+			WHEN (hand$A3suited) RETURN 1 FORCE
+			WHEN (hand$A2suited) RETURN 1 FORCE
+			WHEN (hand$KTsuited) RETURN 1 FORCE
+			WHEN (hand$K9suited) RETURN 1 FORCE
+			WHEN (hand$K6suited) RETURN 1 FORCE
+			WHEN (hand$K5suited) RETURN 1 FORCE
+			WHEN (hand$K4suited) RETURN 1 FORCE
+			WHEN (hand$AQo) RETURN 1 FORCE
+			WHEN (hand$KQo) RETURN 1 FORCE
+			WHEN (hand$Q9suited) RETURN 1 FORCE
+			WHEN (hand$AJo) RETURN 1 FORCE
+			WHEN (hand$KJo) RETURN 1 FORCE
+			WHEN (hand$QJo) RETURN 1 FORCE
+			WHEN (hand$JTsuited) RETURN 1 FORCE
+			WHEN (hand$J9suited) RETURN 1 FORCE
+			WHEN (hand$J8suited) RETURN 1 FORCE
+			WHEN (hand$ATo) RETURN 1 FORCE
+			WHEN (hand$KTo) RETURN 1 FORCE
+			WHEN (hand$T9suited) RETURN 1 FORCE
+			WHEN (hand$T8suited) RETURN 1 FORCE
+			WHEN (hand$98suited) RETURN 1 FORCE
+			WHEN (hand$87suited) RETURN 1 FORCE
+
+
+##f$preflopSBvBB100bb_LFI##
+//////////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////////
+//LFI GTO SB 100bb - 87bb///////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////
+WHEN (Raises = 0 AND (EffectiveMaxStacksizeOfActiveOpponents > 74))
+		WHEN listSB_limp_GTO_100 RETURN 1 FORCE
+		WHEN ((hand$T3suited) OR (hand$T7o)) AND (Random > 4) RETURN 1 FORCE
+		WHEN ((hand$A2suited) OR (hand$97o)) AND (Random > 6) RETURN 1 FORCE
+		WHEN ((hand$K4suited) OR (hand$QTo)) AND (Random > 17) RETURN 1 FORCE
+		WHEN (hand$K6o) AND (Random > 18) RETURN 1 FORCE
+		WHEN (hand$QJo) AND (Random > 19) RETURN 1 FORCE
+		WHEN (hand$76o) AND (Random > 21) RETURN 1 FORCE
+		WHEN ((hand$JTo) OR (hand$63suited)) AND (Random > 22) RETURN 1 FORCE
+		WHEN (hand$Q4suited) AND (Random > 25) RETURN 1 FORCE
+		WHEN ((hand$Q8suited) OR (hand$T7suited)) AND (Random > 26) RETURN 1 FORCE
+		WHEN ((hand$J8suited) OR (hand$98suited)) AND (Random > 27) RETURN 1 FORCE
+		WHEN ((hand$ATo) OR (hand$KTo) OR (hand$97suited) OR (hand$87suited)) AND (Random > 28) RETURN 1 FORCE
+		WHEN ((hand$A3suited) OR (hand$Q7suited) OR (hand$Q2suited)) AND (Random > 29) RETURN 1 FORCE
+		WHEN ((hand$A2suited) OR (hand$87o) OR (hand$22)) AND (Random > 30) RETURN 1 FORCE
+		WHEN (hand$Q8o) AND (Random > 31) RETURN 1 FORCE
+		WHEN ((hand$KJo) OR (hand$J5suited) OR (hand$A5o) OR (hand$54suited)) AND (Random > 32) RETURN 1 FORCE
+		WHEN ((hand$Q5suited) OR (hand$J6suited) OR (hand$T9o) OR (hand$33)) AND (Random > 33) RETURN 1 FORCE
+		WHEN ((hand$J8o) OR (hand$T8suited) OR (hand$A4o)) AND (Random > 34) RETURN 1 FORCE
+		WHEN (hand$K5suited) AND (Random > 35) RETURN 1 FORCE
+		WHEN ((hand$63suited) OR (hand$75suited)) AND (Random >  36) RETURN 1 FORCE
+		WHEN ((hand$98o) OR (hand$76suited) OR (hand$43suited) OR
+						(hand$A6suited) OR (hand$Q6suited)) AND (Random > 37) RETURN 1 FORCE
+		WHEN ((hand$44) OR (hand$53suited) OR (hand$96suited) OR
+						(hand$T4suited) OR (hand$J3suited)) AND (Random > 38) RETURN 1 FORCE
+		WHEN ((hand$86suited) OR (hand$J9o) OR (hand$K7o)) AND (Random >  39) RETURN 1 FORCE
+		WHEN (hand$K7suited) AND (Random > 40) RETURN 1 FORCE
+		WHEN ((hand$K8suited) OR (hand$K6suited) OR (hand$A8o) OR (hand$T8o)) AND (Random > 41) RETURN 1 FORCE
+		WHEN (hand$Q9o) AND (Random > 42) RETURN 1 FORCE
+		WHEN ((hand$AKo) OR (hand$J7suited) OR (hand$55)) AND (Random > 43) RETURN 1 FORCE
+		WHEN ((hand$KQo) OR (hand$77)) AND (Random > 44) RETURN 1 FORCE
+		WHEN (hand$66) AND (Random > 45) RETURN 1 FORCE
+		WHEN (hand$A4suited) AND (Random > 46) RETURN 1 FORCE
+		WHEN ((hand$J4suited) OR (hand$A9o) OR (hand$74suited) OR (hand$64suited)) AND (Random > 47) RETURN 1 FORCE
+		WHEN ((hand$85suited) OR (hand$A7o) OR (hand$A6o)) AND (Random > 49) RETURN 1 FORCE
+		WHEN ((hand$J9suited) OR (hand$65suited)) AND (Random > 50) Call  FORCE
+		WHEN ((hand$QQ) OR (hand$K8o)) AND (Random > 51) RETURN 1 FORCE
+		WHEN ((hand$AJo) OR (hand$T6suited)) AND (Random > 52) RETURN 1 FORCE
+		WHEN (hand$K9o) AND (Random > 53) RETURN 1 FORCE
+		WHEN (hand$KK) AND (Random > 54) RETURN 1 FORCE
+		WHEN (hand$Q9suited) AND (Random > 55) RETURN 1 FORCE
+		WHEN ((hand$JJ) OR (hand$T5suited)) AND (Random > 57) RETURN 1 FORCE
+		WHEN (hand$AQsuited) AND (Random > 58) RETURN 1 FORCE
+		WHEN (hand$88) AND (Random > 59) RETURN 1 FORCE
+		WHEN ((hand$TT) OR (hand$T9suited))  AND (Random > 60) RETURN 1 FORCE
+		WHEN (hand$95suited) AND (Random > 61) RETURN 1 FORCE
+		WHEN (hand$99) AND (Random > 64) RETURN 1 FORCE
+		WHEN (hand$K9suited) AND (Random > 65) RETURN 1 FORCE
+		WHEN ((hand$AJsuited) OR (hand$A7suited)) AND (Random > 66) RETURN 1 FORCE
+		WHEN (hand$AA) AND (Random > 67) RETURN 1 FORCE
+		WHEN (hand$AQo) AND (Random > 69) RETURN 1 FORCE
+		WHEN (hand$KQsuited) AND (Random > 71) RETURN 1 FORCE
+		WHEN (hand$A5suited) AND (Random > 72) RETURN 1 FORCE
+		WHEN (hand$JTsuited) AND (Random > 81) RETURN 1 FORCE
+		WHEN (hand$KJsuited) AND (Random > 82) RETURN 1 FORCE
+		WHEN (hand$A8suited) AND (Random > 83) RETURN 1 FORCE
+		WHEN (hand$A9suited) AND (Random > 87) RETURN 1 FORCE
+		WHEN ((hand$ATsuited) OR (hand$KTsuited)) AND (Random > 89) RETURN 1 FORCE
+		WHEN (hand$AKsuited) AND (Random > 92) RETURN 1 FORCE
+		WHEN (hand$QTsuited) AND (Random > 97) RETURN 1 FORCE
+
+
+##f$preflopSBvBB100bb_Limp_3bet##
+WHEN ((BotsLastPreflopAction = Call) AND
+						(BotsActionsOnThisRound = 1) AND
+						(BetSize > 0) AND
+						(BetSize < 3.26) AND
+						(EffectiveMaxStacksizeOfActiveOpponents > 71)) RETURN 1 FORCE
+
+
+##f$preflopSBvBB100bb_Limp_3bet_B##
+WHEN ((BotsLastPreflopAction = Call) AND
+						(BotsActionsOnThisRound = 1) AND
+						(BetSize > 3.25) AND
+						(BetSize < 5.1) AND
+						(EffectiveMaxStacksizeOfActiveOpponents > 71)) RETURN 1 FORCE
+
+##f$preflopSBvBB100bb_Limp_Call##
+WHEN ((BotsLastPreflopAction = Call) AND
+						(BotsActionsOnThisRound = 1) AND
+						(BetSize > 0) AND
+						(BetSize < 3.26) AND
+						(EffectiveMaxStacksizeOfActiveOpponents > 71))
+			WHEN (hand$A9suited) AND (Random > 49) RETURN 1 FORCE
+			WHEN (hand$A8suited) AND (Random > 72) RETURN 1 FORCE
+			WHEN (hand$A7suited) AND (Random > 15) RETURN 1 FORCE
+			WHEN (hand$A6suited) AND (Random > 14) RETURN 1 FORCE
+			WHEN (hand$A5suited) AND (Random > 85) RETURN 1 FORCE
+			WHEN (hand$A4suited) AND (Random > 35) RETURN 1 FORCE
+			WHEN (hand$A3suited) AND (Random > 02) RETURN 1 FORCE
+			WHEN (hand$A2suited) AND (Random > 05) RETURN 1 FORCE
+			WHEN (hand$K9suited) AND (Random > 42) RETURN 1 FORCE
+			WHEN (hand$K8suited) AND (Random > 30) RETURN 1 FORCE
+			WHEN (hand$K7suited) AND (Random > 21) RETURN 1 FORCE
+			WHEN (hand$K6suited) AND (Random > 13) RETURN 1 FORCE
+			WHEN (hand$K5suited) RETURN 1 FORCE
+			WHEN (hand$K4suited) RETURN 1 FORCE
+			WHEN (hand$K3suited) AND (Random > 02) RETURN 1 FORCE
+			WHEN (hand$K2suited) RETURN 1 FORCE
+			WHEN (hand$KQo) AND (Random > 41) RETURN 1 FORCE
+			WHEN (hand$Q9suited) AND (Random > 37) RETURN 1 FORCE
+			WHEN (hand$Q8suited) RETURN 1 FORCE
+			WHEN (hand$Q7suited) RETURN 1 FORCE
+			WHEN (hand$Q6suited) AND (Random > 01) RETURN 1 FORCE
+			WHEN (hand$Q5suited) RETURN 1 FORCE
+			WHEN (hand$Q4suited) AND (Random > 10) RETURN 1 FORCE
+			WHEN (hand$Q3suited) RETURN 1 FORCE
+			WHEN (hand$Q2suited) RETURN 1 FORCE
+			WHEN (hand$AJo) AND (Random > 37) RETURN 1 FORCE
+			WHEN (hand$KJo) AND (Random > 17) RETURN 1 FORCE
+			WHEN (hand$QJo) AND (Random > 09) RETURN 1 FORCE
+			WHEN (hand$J9suited) AND (Random > 56) RETURN 1 FORCE
+			WHEN (hand$J8suited) AND (Random > 23) RETURN 1 FORCE
+			WHEN (hand$J7suited) AND (Random > 08) RETURN 1 FORCE
+			WHEN (hand$J6suited) AND (Random > 14) RETURN 1 FORCE
+			WHEN (hand$J5suited) AND (Random > 11) RETURN 1 FORCE
+			WHEN (hand$J4suited) AND (Random > 05) RETURN 1 FORCE
+			WHEN (hand$J3suited) AND (Random > 04) RETURN 1 FORCE
+			WHEN (hand$J2suited) RETURN 1 FORCE
+			WHEN (hand$ATo) AND (Random > 13) RETURN 1 FORCE
+			WHEN (hand$KTo) AND (Random > 16) RETURN 1 FORCE
+			WHEN (hand$QTo) AND (Random > 16) RETURN 1 FORCE
+			WHEN (hand$JTo) AND (Random > 13) RETURN 1 FORCE
+			WHEN (hand$T8suited) AND (Random > 41) RETURN 1 FORCE
+			WHEN (hand$T7suited) AND (Random > 17) RETURN 1 FORCE
+			WHEN (hand$T6suited) AND (Random > 09) RETURN 1 FORCE
+			WHEN (hand$T5suited) RETURN 1 FORCE
+			WHEN (hand$T4suited) RETURN 1 FORCE
+			WHEN (hand$A9o) AND (Random > 09) RETURN 1 FORCE
+			WHEN (hand$K9o) AND (Random > 08) RETURN 1 FORCE
+			WHEN (hand$Q9o) RETURN 1 FORCE
+			WHEN (hand$J9o) AND (Random > 02) RETURN 1 FORCE
+			WHEN (hand$T9o) AND (Random > 04) RETURN 1 FORCE
+			WHEN (hand$99) AND (Random > 42) RETURN 1 FORCE
+			WHEN (hand$98suited) AND (Random > 35) RETURN 1 FORCE
+			WHEN (hand$97suited) AND (Random > 10) RETURN 1 FORCE
+			WHEN (hand$96suited) AND (Random > 02) RETURN 1 FORCE
+			WHEN (hand$95suited) AND (Random > 07) RETURN 1 FORCE
+			WHEN (hand$A8o) AND (Random > 09) RETURN 1 FORCE
+			WHEN (hand$K8o) RETURN 1 FORCE
+			WHEN (hand$Q8o) RETURN 1 FORCE
+			WHEN (hand$J8o) RETURN 1 FORCE
+			WHEN (hand$T8o) RETURN 1 FORCE
+			WHEN (hand$98o) RETURN 1 FORCE
+			WHEN (hand$88) AND (Random > 09) RETURN 1 FORCE
+			WHEN (hand$87suited) AND (Random > 29) RETURN 1 FORCE
+			WHEN (hand$86suited) AND (Random > 20) RETURN 1 FORCE
+			WHEN (hand$85suited) AND (Random > 03) RETURN 1 FORCE
+			WHEN (hand$A7o) RETURN 1 FORCE
+			WHEN (hand$K7o) RETURN 1 FORCE
+			WHEN (hand$87o) RETURN 1 FORCE
+			WHEN (hand$77) RETURN 1 FORCE
+			WHEN (hand$76suited) AND (Random > 25) RETURN 1 FORCE
+			WHEN (hand$75suited) RETURN 1 FORCE
+			WHEN (hand$74suited) RETURN 1 FORCE
+			WHEN (hand$A6o) RETURN 1 FORCE
+			WHEN (hand$66) RETURN 1 FORCE
+			WHEN (hand$65suited) AND (Random > 28) RETURN 1 FORCE
+			WHEN (hand$64suited) AND (Random > 05) RETURN 1 FORCE
+			WHEN (hand$A5o) RETURN 1 FORCE
+			WHEN (hand$55) RETURN 1 FORCE
+			WHEN (hand$54suited) AND (Random > 15) RETURN 1 FORCE
+			WHEN (hand$53suited) RETURN 1 FORCE
+			WHEN (hand$A4o) AND (Random > 08) RETURN 1 FORCE
+			WHEN (hand$44) RETURN 1 FORCE
+			WHEN (hand$43suited) RETURN 1 FORCE
+			WHEN (hand$A3o) RETURN 1 FORCE
+			WHEN (hand$33) RETURN 1 FORCE
+			WHEN (hand$22) RETURN 1 FORCE
+
+
+##f$preflopSBvBB100bb_Limp_Call_B##
+WHEN ((BotsLastPreflopAction = Call) AND
+						(BotsActionsOnThisRound = 1) AND
+						(BetSize > 3.25) AND
+						(BetSize < 5.1) AND
+						(EffectiveMaxStacksizeOfActiveOpponents > 69))
+			WHEN (hand$A9suited) AND (Random < 56) RETURN 1 FORCE
+			WHEN (hand$A8suited) AND (Random < 43) RETURN 1 FORCE
+			WHEN (hand$A7suited) AND (Random < 86) RETURN 1 FORCE
+			WHEN (hand$A6suited) AND (Random < 69) RETURN 1 FORCE
+			WHEN (hand$A5suited) AND (Random < 54) RETURN 1 FORCE
+			WHEN (hand$A4suited) RETURN 1 FORCE
+			WHEN (hand$A3suited) RETURN 1 FORCE
+			WHEN (hand$A2suited) RETURN 1 FORCE
+			WHEN (hand$K9suited) AND (Random < 48) RETURN 1 FORCE
+			WHEN (hand$K8suited) AND (Random < 99) RETURN 1 FORCE
+			WHEN (hand$K7suited) RETURN 1 FORCE
+			WHEN (hand$K6suited) AND (Random < 93) RETURN 1 FORCE
+			WHEN (hand$K5suited) RETURN 1 FORCE
+			WHEN (hand$K4suited) RETURN 1 FORCE
+			WHEN (hand$K3suited) RETURN 1 FORCE
+			WHEN (hand$K2suited) RETURN 1 FORCE
+			WHEN (hand$KQo) AND (Random < 62) RETURN 1 FORCE
+			WHEN (hand$QJsuited) AND (Random < 55) RETURN 1 FORCE
+			WHEN (hand$QTsuited) AND (Random < 35) RETURN 1 FORCE
+			WHEN (hand$Q9suited) AND (Random < 70) RETURN 1 FORCE
+			WHEN (hand$Q8suited) RETURN 1 FORCE
+			WHEN (hand$Q7suited) RETURN 1 FORCE
+			WHEN (hand$Q6suited) RETURN 1 FORCE
+			WHEN (hand$Q5suited) RETURN 1 FORCE
+			WHEN (hand$Q4suited) RETURN 1 FORCE
+			WHEN (hand$Q3suited) RETURN 1 FORCE
+			WHEN (hand$Q2suited) RETURN 1 FORCE
+			WHEN (hand$AJo) AND (Random < 59) RETURN 1 FORCE
+			WHEN (hand$KJo) AND (Random < 82) RETURN 1 FORCE
+			WHEN (hand$QJo) RETURN 1 FORCE
+			WHEN (hand$JTsuited) AND (Random < 38) RETURN 1 FORCE
+			WHEN (hand$J9suited) AND (Random < 31) RETURN 1 FORCE
+			WHEN (hand$J8suited) AND (Random < 85) RETURN 1 FORCE
+			WHEN (hand$J7suited) RETURN 1 FORCE
+			WHEN (hand$J6suited) RETURN 1 FORCE
+			WHEN (hand$J5suited) RETURN 1 FORCE
+			WHEN (hand$J4suited) RETURN 1 FORCE
+			WHEN (hand$ATo) AND (Random < 77) RETURN 1 FORCE
+			WHEN (hand$KTo) AND (Random < 72) RETURN 1 FORCE
+			WHEN (hand$QTo) RETURN 1 FORCE
+			WHEN (hand$JTo) AND (Random < 90) RETURN 1 FORCE
+			WHEN (hand$TT) AND (Random < 06) RETURN 1 FORCE
+			WHEN (hand$T9suited) AND (Random < 14) RETURN 1 FORCE
+			WHEN (hand$T8suited) AND (Random < 63) RETURN 1 FORCE
+			WHEN (hand$T7suited) AND (Random < 86) RETURN 1 FORCE
+			WHEN (hand$T6suited) AND (Random < 89) RETURN 1 FORCE
+			WHEN (hand$T5suited) RETURN 1 FORCE
+			WHEN (hand$A9o) AND (Random < 88) RETURN 1 FORCE
+			WHEN (hand$K9o) RETURN 1 FORCE
+			WHEN (hand$Q9o) RETURN 1 FORCE
+			WHEN (hand$J9o) AND (Random < 84) RETURN 1 FORCE
+			WHEN (hand$T9o) RETURN 1 FORCE
+			WHEN (hand$99) AND (Random < 82) RETURN 1 FORCE
+			WHEN (hand$98suited) AND (Random < 74) RETURN 1 FORCE
+			WHEN (hand$97suited) AND (Random < 81) RETURN 1 FORCE
+			WHEN (hand$96suited) AND (Random < 87) RETURN 1 FORCE
+			WHEN (hand$95suited) RETURN 1 FORCE
+			WHEN (hand$A8o) AND (Random < 96) RETURN 1 FORCE
+			WHEN (hand$T8o) RETURN 1 FORCE
+			WHEN (hand$98o) RETURN 1 FORCE
+			WHEN (hand$88) RETURN 1 FORCE
+			WHEN (hand$87suited) AND (Random < 74) RETURN 1 FORCE
+			WHEN (hand$86suited) AND (Random < 76) RETURN 1 FORCE
+			WHEN (hand$85suited) RETURN 1 FORCE
+			WHEN (hand$A7o) RETURN 1 FORCE
+			WHEN (hand$77) RETURN 1 FORCE
+			WHEN (hand$76suited) AND (Random < 66) RETURN 1 FORCE
+			WHEN (hand$75suited) RETURN 1 FORCE
+			WHEN (hand$74suited) RETURN 1 FORCE
+			WHEN (hand$A6o) RETURN 1 FORCE
+			WHEN (hand$66) RETURN 1 FORCE
+			WHEN (hand$65suited) AND (Random < 45) RETURN 1 FORCE
+			WHEN (hand$64suited) RETURN 1 FORCE
+			WHEN (hand$A5o) RETURN 1 FORCE
+			WHEN (hand$55) RETURN 1 FORCE
+			WHEN (hand$54suited) AND (Random < 83) RETURN 1 FORCE
+			WHEN (hand$53suited) RETURN 1 FORCE
+			WHEN (hand$A4o) RETURN 1 FORCE
+			WHEN (hand$44) RETURN 1 FORCE
+			WHEN (hand$43suited) RETURN 1 FORCE
+			WHEN (hand$33) RETURN 1 FORCE
+			WHEN (hand$22) RETURN 1 FORCE
+
+##f$preflopSBvBB100bb_Limp_Fold##
+WHEN ((BotsLastPreflopAction = Call) AND
+						(BotsActionsOnThisRound = 1) AND
+						(HandIsHeadsup) AND
+						(BetSize > 0) AND
+						(BetSize < 3.26) AND
+						(EffectiveMaxStacksizeOfActiveOpponents > 71.3))
+			WHEN ($handT3suited) RETURN 1 FORCE
+			WHEN (hand$T2suited) RETURN 1 FORCE
+			WHEN ($hand94suited) RETURN 1 FORCE
+			WHEN (hand$93suited) RETURN 1 FORCE
+			WHEN ($hand84suited) RETURN 1 FORCE
+			WHEN (hand$63suited) RETURN 1 FORCE
+			WHEN ($hand52suited) RETURN 1 FORCE
+			WHEN (hand$Q7o) RETURN 1 FORCE
+			WHEN (hand$J7o) RETURN 1 FORCE
+			WHEN (hand$T7o) RETURN 1 FORCE
+			WHEN (hand$97o) RETURN 1 FORCE
+			WHEN (hand$K6o) RETURN 1 FORCE
+			WHEN (hand$Q6o) RETURN 1 FORCE
+			WHEN (hand$86o) RETURN 1 FORCE
+			WHEN (hand$76o) RETURN 1 FORCE
+			WHEN (hand$K5o) RETURN 1 FORCE
+			WHEN (hand$Q5o) RETURN 1 FORCE
+			WHEN (hand$Q7o) RETURN 1 FORCE
+			WHEN (hand$65o) RETURN 1 FORCE
+			WHEN (hand$K4o) RETURN 1 FORCE
+			WHEN (hand$K3o) RETURN 1 FORCE
+			WHEN (hand$A2o) RETURN 1 FORCE
+			WHEN ((hand$A3o) AND (Random > 13)) RETURN 1 FORCE
+			WHEN ((hand$K7o) AND (Random  > 20)) RETURN 1 FORCE
+			WHEN ((hand$87o) AND (Random > 19)) RETURN 1 FORCE
+			WHEN ((hand$Q8o) AND (Random  > 09)) RETURN 1 FORCE
+			WHEN ((hand$J8o) AND (Random > 09)) RETURN 1 FORCE
+			WHEN ((hand$T8o) AND (Random  > 76)) RETURN 1 FORCE
+			WHEN ((hand$A3o) AND (Random > 13)) RETURN 1 FORCE
+			WHEN ((hand$98o) AND (Random  > 50)) RETURN 1 FORCE
+			WHEN ((hand$95suited) AND (Random > 92)) RETURN 1 FORCE
+			WHEN ((hand$T4suited) AND (Random  > 41)) RETURN 1 FORCE
+			WHEN ((hand$J2suited) AND (Random > 54)) RETURN 1 FORCE
+
+
+##f$preflopSBvBB100bb_Limp_Fold_B##
+WHEN ((BotsLastPreflopAction = Call) AND
+						(BotsActionsOnThisRound = 1) AND
+						(HandIsHeadsup) AND
+						(BetSize > 3.25) AND
+						(BetSize < 5.1) AND
+						(EffectiveMaxStacksizeOfActiveOpponents > 69))
+			WHEN ($handQ2suited) AND (Random < 06) RETURN 1 FORCE
+			WHEN (hand$J4suited) AND (Random < 52) RETURN 1 FORCE
+			WHEN ($handJ3suited) RETURN 1 FORCE
+			WHEN (hand$J2suited) RETURN 1 FORCE
+			WHEN ($handT5suited) AND (Random < 20) RETURN 1 FORCE
+			WHEN (hand$T4suited) RETURN 1 FORCE
+			WHEN ($handT3suited) RETURN 1 FORCE
+			WHEN (hand$T2suited) RETURN 1 FORCE
+			WHEN (hand$Q9o) AND (Random < 36) RETURN 1 FORCE
+			WHEN (hand$J9o) AND (Random < 15) RETURN 1 FORCE
+			WHEN (hand$95suited) AND (Random < 99) RETURN 1 FORCE
+			WHEN (hand$94suited) RETURN 1 FORCE
+			WHEN (hand$93suited) RETURN 1 FORCE
+			WHEN (hand$92suited) RETURN 1 FORCE
+			WHEN (hand$K8o) RETURN 1 FORCE
+			WHEN (hand$Q8o) RETURN 1 FORCE
+			WHEN (hand$J8o) RETURN 1 FORCE
+			WHEN (hand$T8o) AND (Random < 73) RETURN 1 FORCE
+			WHEN (hand$98o) AND (Random < 86) RETURN 1 FORCE
+			WHEN (hand$84suited) RETURN 1 FORCE
+			WHEN (hand$A7o) AND (Random < 85) RETURN 1 FORCE
+			WHEN (hand$K7o) RETURN 1 FORCE
+			WHEN (hand$Q7o) RETURN 1 FORCE
+			WHEN (hand$J7o) RETURN 1 FORCE
+			WHEN (hand$T7o) RETURN 1 FORCE
+			WHEN (hand$97o) RETURN 1 FORCE
+			WHEN (hand$87o) RETURN 1 FORCE
+			WHEN (hand$74suited) AND (Random  < 55) RETURN 1 FORCE
+			WHEN (hand$73suited) RETURN 1 FORCE
+			WHEN (hand$A6o) AND (Random  < 57) RETURN 1 FORCE
+			WHEN (hand$K6o) RETURN 1 FORCE
+			WHEN (hand$Q6o) RETURN 1 FORCE
+			WHEN (hand$J6o) RETURN 1 FORCE
+			WHEN (hand$T6o) RETURN 1 FORCE
+			WHEN (hand$96o) RETURN 1 FORCE
+			WHEN (hand$86o) RETURN 1 FORCE
+			WHEN (hand$76o) RETURN 1 FORCE
+			WHEN (hand$63suited) RETURN 1 FORCE
+			WHEN (hand$K5o) RETURN 1 FORCE
+			WHEN (hand$Q5o) RETURN 1 FORCE
+			WHEN (hand$J5o) RETURN 1 FORCE
+			WHEN (hand$75o) RETURN 1 FORCE
+			WHEN (hand$65o) RETURN 1 FORCE
+			WHEN (hand$52suited) RETURN 1 FORCE
+			WHEN (hand$A4o) AND (Random < 86) RETURN 1 FORCE
+			WHEN (hand$K4o) RETURN 1 FORCE
+			WHEN (hand$Q4o) RETURN 1 FORCE
+			WHEN (hand$54o) RETURN 1 FORCE
+			WHEN (hand$43suited) AND (Random < 53) RETURN 1 FORCE
+			WHEN (hand$A3o) RETURN 1 FORCE
+			WHEN (hand$K3o) RETURN 1 FORCE
+			WHEN (hand$A2o) RETURN 1 FORCE
+
+##f$preflopSBvBB100bb_RFI##
+////////////////////////////////////////////////////////////////////////////////////////////
+///////Raise////////RFI SB 100bb - 87bb GTO//////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////
+WHEN (Raises = 0 AND (EffectiveMaxStacksizeOfActiveOpponents > 74))
+			WHEN listSB_rfi_GTO_100 RETURN 1  FORCE
+
+
+##f$preflopSBvBU100bb_3bet##
+WHEN ((Raises = 1) AND (BetSize < 2.7) AND (EffectiveMaxStacksizeOfActiveOpponents > 74)) RETURN 1 FORCE
+
+##f$preflopSBvBU100bb_5bet_AllIn##
+WHEN ((BotsLastPreflopAction = Raise) AND
+			 (Raises = 2) AND
+			 (LastRaiserPosition = 2) AND
+				(BetSize > 24)) RETURN 1 FORCE
+
+##f$preflopSBvBU100bb_Call##
+WHEN ((Raises = 1) AND (BetSize < 2.7) AND (EffectiveMaxStacksizeOfActiveOpponents > 74))
+			WHEN ((hand$AQsuited) AND (Random < 04)) RETURN 1 FORCE
+			WHEN ((hand$A9suited) AND (Random < 26)) RETURN 1 FORCE
+			WHEN ((hand$A8suited) AND (Random < 21)) RETURN 1 FORCE
+			WHEN ((hand$A7suited) AND (Random < 23)) RETURN 1 FORCE
+			WHEN ((hand$A6suited) AND (Random < 35)) RETURN 1 FORCE
+			WHEN ((hand$A5suited) AND (Random < 12)) RETURN 1 FORCE
+			WHEN ((hand$A4suited) AND (Random < 28)) RETURN 1 FORCE
+			WHEN ((hand$A3suited) AND (Random < 19)) RETURN 1 FORCE
+			WHEN ((hand$KQsuited) AND (Random < 04)) RETURN 1 FORCE
+			WHEN ((hand$KJsuited) AND (Random < 07)) RETURN 1 FORCE
+			WHEN ((hand$KTsuited) AND (Random < 01)) RETURN 1 FORCE
+			WHEN ((hand$K9suited) AND (Random < 15)) RETURN 1 FORCE
+			WHEN ((hand$K8suited) AND (Random < 22)) RETURN 1 FORCE
+			WHEN ((hand$K7suited) AND (Random < 11)) RETURN 1 FORCE
+			WHEN ((hand$K6suited) AND (Random < 07)) RETURN 1 FORCE
+			WHEN ((hand$AQo) AND (Random < 11)) RETURN 1 FORCE
+			WHEN ((hand$KQo) AND (Random < 07)) RETURN 1 FORCE
+			WHEN ((hand$QJsuited) AND (Random < 05)) RETURN 1 FORCE
+			WHEN ((hand$QTsuited) AND (Random < 09)) RETURN 1 FORCE
+			WHEN ((hand$Q9suited) AND (Random < 30)) RETURN 1 FORCE
+			WHEN ((hand$Q8suited) AND (Random < 07)) RETURN 1 FORCE
+			WHEN ((hand$AJo) AND (Random < 04)) RETURN 1 FORCE
+			WHEN ((hand$KJo) AND (Random < 22)) RETURN 1 FORCE
+			WHEN ((hand$QJo) AND (Random < 12)) RETURN 1 FORCE
+			WHEN ((hand$J9suited) AND (Random < 14)) RETURN 1 FORCE
+			WHEN ((hand$J8suited) AND (Random < 05)) RETURN 1 FORCE
+			WHEN ((hand$ATo) AND (Random < 26)) RETURN 1 FORCE
+			WHEN ((hand$KTo) AND (Random < 06)) RETURN 1 FORCE
+			WHEN ((hand$QTo) AND (Random < 01)) RETURN 1 FORCE
+			WHEN ((hand$JTo) AND (Random < 06)) RETURN 1 FORCE
+			WHEN ((hand$TT) AND (Random < 07)) RETURN 1 FORCE
+			WHEN ((hand$T9suited) AND (Random < 09)) RETURN 1 FORCE
+			WHEN ((hand$T8suited) AND (Random < 11)) RETURN 1 FORCE
+			WHEN ((hand$99) AND (Random < 11)) RETURN 1 FORCE
+			WHEN ((hand$98suited) AND (Random < 09)) RETURN 1 FORCE
+			WHEN ((hand$88) AND (Random < 07)) RETURN 1 FORCE
+			WHEN ((hand$87suited) AND (Random < 05)) RETURN 1 FORCE
+			WHEN ((hand$77) AND (Random < 16)) RETURN 1 FORCE
+			WHEN ((hand$76suited) AND (Random < 03)) RETURN 1 FORCE
+			WHEN ((hand$66) AND (Random < 20)) RETURN 1 FORCE
+			WHEN ((hand$55) AND (Random < 30)) RETURN 1 FORCE
+			WHEN ((hand$44) AND (Random < 24)) RETURN 1 FORCE
+			WHEN ((hand$33) AND (Random < 21)) RETURN 1 FORCE
+			WHEN ((hand$22) AND (Random < 21)) RETURN 1 FORCE
+
+##f$preflopSBvBU100bb_Call_4bet##
+WHEN ((BotsLastPreflopAction = Raise) AND
+			 (Raises = 2) AND
+				(EffectiveMaxStacksizeOfActiveOpponents > 44) AND
+			 (BetSize > 14) AND
+				(BetSize < 31))
+			WHEN (hand$AA) AND (Random < 46) RETURN 1 FORCE
+			WHEN (hand$AQsuited) RETURN 1 FORCE
+			WHEN (hand$AJsuited) RETURN 1 FORCE
+			WHEN (hand$ATsuited) RETURN 1 FORCE
+			WHEN (hand$A9suited) RETURN 1 FORCE
+			WHEN (hand$A8suited) RETURN 1 FORCE
+			WHEN (hand$A7suited) RETURN 1 FORCE
+			WHEN (hand$A6suited) RETURN 1 FORCE
+			WHEN (hand$A5suited) AND (Random < 21) RETURN 1 FORCE
+			WHEN (hand$A4suited) AND (Random < 38) RETURN 1 FORCE
+			WHEN (hand$A3suited) RETURN 1 FORCE
+			WHEN (hand$KQsuited) RETURN 1 FORCE
+			WHEN (hand$KJsuited) RETURN 1 FORCE
+			WHEN (hand$KTsuited) RETURN 1 FORCE
+			WHEN (hand$AQo) RETURN 1 FORCE
+			WHEN (hand$QJsuited) RETURN 1 FORCE
+			WHEN (hand$QTsuited) RETURN 1 FORCE
+			WHEN (hand$Q9suited) RETURN 1 FORCE
+			WHEN (hand$AJo) RETURN 1 FORCE
+			WHEN (hand$JJ) AND (Random < 77) RETURN 1 FORCE
+			WHEN (hand$JTsuited) RETURN 1 FORCE
+			WHEN (hand$TT) RETURN 1 FORCE
+			WHEN (hand$T9suited) RETURN 1 FORCE
+			WHEN (hand$99) AND (Random < 94) RETURN 1 FORCE
+			WHEN (hand$98suited) RETURN 1 FORCE
+			WHEN (hand$88) RETURN 1 FORCE
+			WHEN (hand$87suited) RETURN 1 FORCE
+			WHEN (hand$77) RETURN 1 FORCE
+			WHEN (hand$76suited) RETURN 1 FORCE
+			WHEN (hand$66) RETURN 1 FORCE
+			WHEN (hand$65suited) RETURN 1 FORCE
+			WHEN (hand$55) RETURN 1 FORCE
+			WHEN (hand$44) RETURN 1 FORCE
+
+##f$preflopSBvBU100bb_Fold##
+WHEN ((Raises = 1) AND (EffectiveMaxStacksizeOfActiveOpponents > 74))
+			WHEN ((hand$A3suited) AND (Random < 67)) RETURN 1 FORCE
+			WHEN ((hand$K8suited) AND (Random < 36)) RETURN 1 FORCE
+			WHEN ((hand$K7suited) AND (Random < 73)) RETURN 1 FORCE
+			WHEN ((hand$K6suited) AND (Random < 93)) RETURN 1 FORCE
+			WHEN ((hand$Q8suited) AND (Random < 93)) RETURN 1 FORCE
+			WHEN ((hand$J8suited) AND (Random < 95)) RETURN 1 FORCE
+			WHEN ((hand$QJo) AND (Random < 88)) RETURN 1 FORCE
+			WHEN ((hand$ATo) AND (Random < 10)) RETURN 1 FORCE
+			WHEN ((hand$KTo) AND (Random < 94)) RETURN 1 FORCE
+			WHEN ((hand$QTo) AND (Random < 99)) RETURN 1 FORCE
+			WHEN ((hand$JTo) AND (Random < 94)) RETURN 1 FORCE
+			WHEN ((hand$T8suited) AND (Random < 14)) RETURN 1 FORCE
+			WHEN ((hand$98suited) AND (Random < 45)) RETURN 1 FORCE
+			WHEN ((hand$87suited) AND (Random < 87)) RETURN 1 FORCE
+			WHEN ((hand$76suited) AND (Random < 73)) RETURN 1 FORCE
+			WHEN ((hand$44) AND (Random < 76)) RETURN 1 FORCE
+			WHEN ((hand$33) AND (Random < 79)) RETURN 1 FORCE
+			WHEN ((hand$22) AND (Random < 79)) RETURN 1 FORCE
+			WHEN (hand$A2suited) RETURN 1 FORCE
+			WHEN (hand$K5suited) RETURN 1 FORCE
+			WHEN (hand$K4suited) RETURN 1 FORCE
+			WHEN (hand$K3suited) RETURN 1 FORCE
+			WHEN (hand$K2suited) RETURN 1 FORCE
+			WHEN (hand$Q7suited) RETURN 1 FORCE
+			WHEN (hand$Q6suited) RETURN 1 FORCE
+			WHEN (hand$Q5suited) RETURN 1 FORCE
+			WHEN (hand$Q4suited) RETURN 1 FORCE
+			WHEN (hand$Q3suited) RETURN 1 FORCE
+			WHEN (hand$Q2suited) RETURN 1 FORCE
+			WHEN (hand$J7suited) RETURN 1 FORCE
+			WHEN (hand$J6suited) RETURN 1 FORCE
+			WHEN (hand$J5suited) RETURN 1 FORCE
+			WHEN (hand$J4suited) RETURN 1 FORCE
+			WHEN (hand$A2suited) RETURN 1 FORCE
+			WHEN (hand$J3suited) RETURN 1 FORCE
+			WHEN (hand$J2suited) RETURN 1 FORCE
+			WHEN (hand$T7suited) RETURN 1 FORCE
+			WHEN (hand$T6suited) RETURN 1 FORCE
+			WHEN (hand$T5suited) RETURN 1 FORCE
+			WHEN (hand$T4suited) RETURN 1 FORCE
+			WHEN (hand$T3suited) RETURN 1 FORCE
+			WHEN (hand$T2suited) RETURN 1 FORCE
+			WHEN (hand$97suited) RETURN 1 FORCE
+			WHEN (hand$96suited) RETURN 1 FORCE
+			WHEN (hand$95suited) RETURN 1 FORCE
+			WHEN (hand$94suited) RETURN 1 FORCE
+			WHEN (hand$93suited) RETURN 1 FORCE
+			WHEN (hand$92suited) RETURN 1 FORCE
+			WHEN (hand$86suited) RETURN 1 FORCE
+			WHEN (hand$85suited) RETURN 1 FORCE
+			WHEN (hand$84suited) RETURN 1 FORCE
+			WHEN (hand$83suited) RETURN 1 FORCE
+			WHEN (hand$82suited) RETURN 1 FORCE
+			WHEN (hand$75suited) RETURN 1 FORCE
+			WHEN (hand$74suited) RETURN 1 FORCE
+			WHEN (hand$73suited) RETURN 1 FORCE
+			WHEN (hand$72suited) RETURN 1 FORCE
+			WHEN (hand$65suited) RETURN 1 FORCE
+			WHEN (hand$64suited) RETURN 1 FORCE
+			WHEN (hand$63suited) RETURN 1 FORCE
+			WHEN (hand$62suited) RETURN 1 FORCE
+			WHEN (hand$54suited) RETURN 1 FORCE
+			WHEN (hand$53suited) RETURN 1 FORCE
+			WHEN (hand$52suited) RETURN 1 FORCE
+			WHEN (hand$43suited) RETURN 1 FORCE
+			WHEN (hand$42suited) RETURN 1 FORCE
+			WHEN (hand$32suited) RETURN 1 FORCE
+			WHEN (hand$A9o) RETURN 1 FORCE
+			WHEN (hand$K9o) RETURN 1 FORCE
+			WHEN (hand$Q9o) RETURN 1 FORCE
+			WHEN (hand$J9o) RETURN 1 FORCE
+			WHEN (hand$T9o) RETURN 1 FORCE
+			WHEN (hand$A8o) RETURN 1 FORCE
+			WHEN (hand$K8o) RETURN 1 FORCE
+			WHEN (hand$Q8o) RETURN 1 FORCE
+			WHEN (hand$J8o) RETURN 1 FORCE
+			WHEN (hand$T8o) RETURN 1 FORCE
+			WHEN (hand$98o) RETURN 1 FORCE
+			WHEN (hand$A7o) RETURN 1 FORCE
+			WHEN (hand$K7o) RETURN 1 FORCE
+			WHEN (hand$Q7o) RETURN 1 FORCE
+			WHEN (hand$J7o) RETURN 1 FORCE
+			WHEN (hand$T7o) RETURN 1 FORCE
+			WHEN (hand$97o) RETURN 1 FORCE
+			WHEN (hand$87o) RETURN 1 FORCE
+			WHEN (hand$A6o) RETURN 1 FORCE
+			WHEN (hand$K6o) RETURN 1 FORCE
+			WHEN (hand$Q6o) RETURN 1 FORCE
+			WHEN (hand$J6o) RETURN 1 FORCE
+			WHEN (hand$T6o) RETURN 1 FORCE
+			WHEN (hand$96o) RETURN 1 FORCE
+			WHEN (hand$86o) RETURN 1 FORCE
+			WHEN (hand$76o) RETURN 1 FORCE
+			WHEN (hand$A5o) RETURN 1 FORCE
+			WHEN (hand$K5o) RETURN 1 FORCE
+			WHEN (hand$Q5o) RETURN 1 FORCE
+			WHEN (hand$J5o) RETURN 1 FORCE
+			WHEN (hand$T5o) RETURN 1 FORCE
+			WHEN (hand$95o) RETURN 1 FORCE
+			WHEN (hand$85o) RETURN 1 FORCE
+			WHEN (hand$75o) RETURN 1 FORCE
+			WHEN (hand$65o) RETURN 1 FORCE
+			WHEN (hand$A4o) RETURN 1 FORCE
+			WHEN (hand$K4o) RETURN 1 FORCE
+			WHEN (hand$Q4o) RETURN 1 FORCE
+			WHEN (hand$J4o) RETURN 1 FORCE
+			WHEN (hand$T4o) RETURN 1 FORCE
+			WHEN (hand$94o) RETURN 1 FORCE
+			WHEN (hand$84o) RETURN 1 FORCE
+			WHEN (hand$74o) RETURN 1 FORCE
+			WHEN (hand$64o) RETURN 1 FORCE
+			WHEN (hand$54o) RETURN 1 FORCE
+			WHEN (hand$A3o) RETURN 1 FORCE
+			WHEN (hand$K3o) RETURN 1 FORCE
+			WHEN (hand$Q3o) RETURN 1 FORCE
+			WHEN (hand$J3o) RETURN 1 FORCE
+			WHEN (hand$T3o) RETURN 1 FORCE
+			WHEN (hand$93o) RETURN 1 FORCE
+			WHEN (hand$83o) RETURN 1 FORCE
+			WHEN (hand$73o) RETURN 1 FORCE
+			WHEN (hand$63o) RETURN 1 FORCE
+			WHEN (hand$53o) RETURN 1 FORCE
+			WHEN (hand$43o) RETURN 1 FORCE
+			WHEN (hand$A2o) RETURN 1 FORCE
+			WHEN (hand$K2o) RETURN 1 FORCE
+			WHEN (hand$Q2o) RETURN 1 FORCE
+			WHEN (hand$J2o) RETURN 1 FORCE
+			WHEN (hand$T2o) RETURN 1 FORCE
+			WHEN (hand$92o) RETURN 1 FORCE
+			WHEN (hand$82o) RETURN 1 FORCE
+			WHEN (hand$72o) RETURN 1 FORCE
+			WHEN (hand$62o) RETURN 1 FORCE
+			WHEN (hand$52o) RETURN 1 FORCE
+			WHEN (hand$42o) RETURN 1 FORCE
+			WHEN (hand$32o) RETURN 1 FORCE
+
+##f$preflopSBvBU100bb_Fold_to_4bet##
+WHEN ((BotsLastPreflopAction = Raise) AND
+			 (Raises = 2) AND
+			 (BetSize > 14))
+			WHEN (hand$A7suited) AND (Random  < 13) RETURN 1 FORCE
+			WHEN (hand$A6suited) AND (Random  < 89) RETURN 1 FORCE
+			WHEN (hand$A3suited) AND (Random  < 96) RETURN 1 FORCE
+			WHEN (hand$KTsuited) AND (Random  < 45) RETURN 1 FORCE
+			WHEN (hand$K9suited) RETURN 1 FORCE
+			WHEN (hand$K8suited) RETURN 1 FORCE
+			WHEN (hand$KQo) RETURN 1 FORCE
+			WHEN (hand$QTsuited) AND (Random  < 47) RETURN 1 FORCE
+			WHEN (hand$Q9suited) AND (Random  < 93) RETURN 1 FORCE
+			WHEN (hand$AJo) AND (Random  < 40) RETURN 1 FORCE
+			WHEN (hand$KJo) RETURN 1 FORCE
+			WHEN (hand$JTsuited) AND (Random  < 94) RETURN 1 FORCE
+			WHEN (hand$J9suited) RETURN 1 FORCE
+			WHEN (hand$ATo) RETURN 1 FORCE
+			WHEN (hand$KTo) RETURN 1 FORCE
+			WHEN (hand$T8suited) RETURN 1 FORCE
+
